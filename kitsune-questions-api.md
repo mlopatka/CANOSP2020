@@ -158,3 +158,140 @@ curl -X GET "https://support.mozilla.org/api/2/question/?format=json&ordering=-u
 }
 
 ```
+
+# API for a single question
+
+* Endpoint:
+```
+https://support.mozilla.org/api/2/question/<id>/
+e.g.
+https://support.mozilla.org/api/2/question/1271141/
+```
+* Sample code: https://github.com/rtanglao/rt-kits-api2/blob/master/test-time-question-1271141.rb
+
+* Sample output in json
+
+```json
+{
+                "answers" => [
+        [0] 1260198,
+        [1] 1260199,
+        [2] 1260205
+    ],
+                "content" => "<p>My previous question: <a href=\"https://support.mozilla.org/en-US/questions/1254024\" rel=\"nofollow\">https://support.mozilla.org/en-US/questions/1254024</a>\n</p><p>With the latest update, the following css tweak to disable the creation of new tab when middle clicking the empty tab bar area no longer works.\n</p><p><a href=\"https://pastebin.com/zSJYR8PJ\" rel=\"nofollow\">https://pastebin.com/zSJYR8PJ</a>\n</p><p>This along with the shortcut CTRL+SHIFT+P to open a new private window are features no other browsers have.\n</p>",
+                "created" => "2019-10-23T00:02:46Z",
+                "creator" => {
+            "username" => "ZetiX",
+        "display_name" => "ZetiX",
+              "avatar" => "https://firefoxusercontent.com/00000000000000000000000000000000"
+    },
+                     "id" => 1271141,
+               "involved" => [
+        [0] {
+                "username" => "jscher2000",
+            "display_name" => "jscher2000",
+                  "avatar" => "https://firefoxusercontent.com/4c7c89d3462af52bac94074246fd5e98"
+        },
+        [1] {
+                "username" => "ZetiX",
+            "display_name" => "ZetiX",
+                  "avatar" => "https://firefoxusercontent.com/00000000000000000000000000000000"
+        },
+        [2] {
+                "username" => "cor-el",
+            "display_name" => "",
+                  "avatar" => "https://firefoxusercontent.com/f369028d14003acbf4f1a9ed0debb2c8"
+        }
+    ],
+            "is_archived" => false,
+              "is_locked" => false,
+              "is_solved" => true,
+                "is_spam" => false,
+               "is_taken" => false,
+            "last_answer" => 1260205,
+                 "locale" => "en-US",
+               "metadata" => [
+        [0] {
+             "name" => "category",
+            "value" => "tabs"
+        },
+        [1] {
+             "name" => "ff_version",
+            "value" => "70.0"
+        },
+        [2] {
+             "name" => "os",
+            "value" => "Windows 10"
+        },
+        [3] {
+             "name" => "product",
+            "value" => "desktop"
+        },
+        [4] {
+             "name" => "solver_id",
+            "value" => "1473644"
+        },
+        [5] {
+             "name" => "useragent",
+            "value" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0"
+        }
+    ],
+                   "tags" => [
+        [0] {
+            "name" => "tabs",
+            "slug" => "tabs"
+        },
+        [1] {
+            "name" => "Firefox 70.0",
+            "slug" => "firefox-700"
+        },
+        [2] {
+            "name" => "desktop",
+            "slug" => "desktop"
+        },
+        [3] {
+            "name" => "Windows 10",
+            "slug" => "windows-10"
+        },
+        [4] {
+            "name" => "unsupported",
+            "slug" => "unsupported"
+        },
+        [5] {
+            "name" => "unsupporteduserchrome.css",
+            "slug" => "unsupporteduserchromecss"
+        },
+        [6] {
+            "name" => "unsuppportedhacks",
+            "slug" => "unsuppportedhacks"
+        },
+        [7] {
+            "name" => "userchrome.css",
+            "slug" => "userchromecss"
+        }
+    ],
+            "num_answers" => 3,
+    "num_votes_past_week" => 1,
+              "num_votes" => 1,
+                "product" => "firefox",
+               "solution" => 1260198,
+              "solved_by" => {
+            "username" => "jscher2000",
+        "display_name" => "jscher2000",
+              "avatar" => "https://firefoxusercontent.com/4c7c89d3462af52bac94074246fd5e98"
+    },
+            "taken_until" => nil,
+               "taken_by" => nil,
+                  "title" => "Disable middle click tab bar",
+                  "topic" => "tabs",
+             "updated_by" => {
+            "username" => "ZetiX",
+        "display_name" => "ZetiX",
+              "avatar" => "https://firefoxusercontent.com/00000000000000000000000000000000"
+    },
+                "updated" => "2019-10-23T02:11:10Z"
+}
+```
+
+
+
