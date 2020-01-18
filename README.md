@@ -37,6 +37,7 @@ We will investigate improvements to the quality and throughput of the support sy
 $ virtualenv venv --python=python3
 $ source venv/bin/activate
 $ pip install -r requirements.txt
+$ pip freeze > requirements.txt
 ```
 
 ## Code Style
