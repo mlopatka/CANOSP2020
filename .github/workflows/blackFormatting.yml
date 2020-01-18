@@ -3,9 +3,10 @@ name: Format Python Code
 on: [pull_request]
 
 jobs:
-  test_formatting:
+  black:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v1
     - name: Black Code Formatter
       uses: lgeiger/black-action@v1.0.1
       with:
