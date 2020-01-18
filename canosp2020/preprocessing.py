@@ -12,10 +12,15 @@ class Preprocess:
     hello world like
     """
 
-    def __init__(self, lemmatization=True, remove_punct=True):
+    def __init__(self, lemmatization=True, remove_punct=True, remove_stopword=True):
         self._pipeline = pipeline.Pipeline(["CleanText"])
         self._pipeline.register_operation("CustomOp", self._custom_op)
-        self._pipeline.steps.append(("CustomOp", {"Lemmatization": lemmatization, "RemovePunct": remove_punct}))
+        self._pipeline.steps.append(
+            (
+                "CustomOp",
+                {"Lemmatization": lemmatization, "RemovePunct": remove_punct, "RemoveStopword": remove_stopword},
+            )
+        )
 
     @staticmethod
     def _custom_op(doc: doc.Doc, context=None, settings=None, **kwargs):
@@ -29,6 +34,9 @@ class Preprocess:
 
         if settings["RemovePunct"]:
             spacy_doc = spacy_nlp(" ".join([token.text for token in spacy_doc if not token.is_punct]))
+
+        if settings["RemoveStopword"]:
+            spacy_doc = spacy_nlp(" ".join([token.text for token in spacy_doc if not token.is_stop]))
 
         return spacy_doc
 
