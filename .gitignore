@@ -4,6 +4,7 @@ scrap
 __pycache__/
 *.py[cod]
 *$py.class
+raw_data/
 
 # C extensions
 *.so
