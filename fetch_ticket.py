@@ -144,6 +144,7 @@ def merge_tickets():
             row[1]: {"tagger_id": row[1], "is_expert": True if row[2] == "1" else False, "is_sumo": False}
             for row in reader
         }
+    taggers["0"] = {"0": {"tagger_id": "0", "is_expert": False, "is_sumo": True}}
 
     # read all crowdsource tickets and tags
     crowdsouce_tickets = {}
