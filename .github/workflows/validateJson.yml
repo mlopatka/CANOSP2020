@@ -20,5 +20,4 @@ jobs:
       run: |
         pip install pytest
         pip install jsonschema
-        pip install json
         pytest
