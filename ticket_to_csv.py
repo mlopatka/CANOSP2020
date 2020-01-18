@@ -8,6 +8,7 @@ def preprocess_text(text):
     """Clean and process the raw ticket text"""
     text = text.replace(",", "")  # remove commas
     text = text.replace('"', "")  # remove double quotes
+    text = text.replace("\n", "")  # remove newlines
     return text
 
 
