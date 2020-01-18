@@ -1,0 +1,10 @@
+name: Format Python Code
+
+on: [pull_request]
+
+jobs:
+  test_formatting:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Black Code Formatter
+      uses: lgeiger/black-action@v1.0.1
