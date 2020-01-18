@@ -1,4 +1,4 @@
-name: Validate Json Schema
+name: Validate All Schemas
 
 on: [pull_request]
 
