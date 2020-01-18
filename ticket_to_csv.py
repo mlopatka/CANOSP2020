@@ -34,8 +34,6 @@ def write_ticket(csv_writer, ticket, taggers):
 
     csv_writer.writerow(ticket_list)
     # print(ticket_list)
-
-
 def ticket_to_csv(json_path, csv_path):
     """Converts a ticket JSON file into a CSV file"""
     num_tickets = 0
