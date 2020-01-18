@@ -4,14 +4,15 @@ import argparse
 import pathlib
 
 
-# text preprocessing pipeline
 def preprocess_text(text):
+    """Clean and process the raw ticket text"""
     text = text.replace(",", "")  # remove commas
-    text = text.replace('"', "")  # remove double quotes
+    text = text.replace("\"", "")  # remove double quotes
     return text
 
-# write a ticket as a row in the CSV
+
 def write_ticket(csv_writer, ticket, taggers):
+    """Writes a ticket as a row in the CSV file"""
     ticket_id = ticket["ticket_id"]
 
     ticket_title = preprocess_text(ticket["title"])
@@ -36,6 +37,7 @@ def write_ticket(csv_writer, ticket, taggers):
 
 
 def ticket_to_csv(json_path, csv_path):
+    """Converts a ticket JSON file into a CSV file"""
     num_tickets = 0
     num_unique_tickets = 0
     ticket_ids = set()
@@ -47,7 +49,7 @@ def ticket_to_csv(json_path, csv_path):
     taggers = []
     for tagger in json_dict["taggers"]:
         taggers.append(tagger["tagger_id"])
-    # print('Taggers:', taggers)
+    # print("Taggers:", taggers)
 
     # create CSV writer
     csv_file = open(csv_path, "w", newline="")
