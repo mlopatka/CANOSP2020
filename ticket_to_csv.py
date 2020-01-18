@@ -9,6 +9,7 @@ def preprocess_text(text):
     text = text.replace(",", "")  # remove commas
     text = text.replace('"', "")  # remove double quotes
     text = text.replace("\n", "")  # remove newlines
+    text = text.replace("\r", "")  # remove other newlines
     return text
 
 
