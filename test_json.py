@@ -98,4 +98,3 @@ def test_json_schema():
 
     json_dict = json_producer()
     assert jsonschema.validate(instance = json_dict, schema = SCHEMA) is None
-

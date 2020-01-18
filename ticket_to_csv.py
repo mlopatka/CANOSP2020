@@ -7,7 +7,7 @@ import pathlib
 def preprocess_text(text):
     """Clean and process the raw ticket text"""
     text = text.replace(",", "")  # remove commas
-    text = text.replace("\"", "")  # remove double quotes
+    text = text.replace('"', "")  # remove double quotes
     return text
 
 
@@ -26,7 +26,7 @@ def write_ticket(csv_writer, ticket, taggers):
     ticket_taggers = tag_dict.keys()
     for tagger in taggers:
         if tagger in ticket_taggers:
-            tags = "|".join(tag_dict[tagger])   # using | as a delimeter for now
+            tags = "|".join(tag_dict[tagger])  # using | as a delimeter for now
         else:
             tags = ""
         ticket_list.append(tags)
