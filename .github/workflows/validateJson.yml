@@ -19,4 +19,6 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
+        pip install jsonschema
+        pip install json
         pytest
