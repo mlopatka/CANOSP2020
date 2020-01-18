@@ -1,4 +1,4 @@
-name: Python package
+name: Validate All Schemas
 
 on: [pull_request]
 
