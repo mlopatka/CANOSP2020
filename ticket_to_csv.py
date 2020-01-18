@@ -1,8 +1,10 @@
 import json
 import csv
-import argparse
-import pathlib
 
+
+import argparse
+
+import pathlib
 
 def preprocess_text(text):
     """Clean and process the raw ticket text"""
@@ -25,7 +27,11 @@ def write_ticket(csv_writer, ticket, taggers):
     tag_dict = ticket["tags"]
     ticket_taggers = tag_dict.keys()
     for tagger in taggers:
+        
+        
         if tagger in ticket_taggers:
+            
+            
             tags = "|".join(tag_dict[tagger])  # using | as a delimeter for now
         else:
             tags = ""
@@ -34,8 +40,6 @@ def write_ticket(csv_writer, ticket, taggers):
 
     csv_writer.writerow(ticket_list)
     # print(ticket_list)
-
-
 def ticket_to_csv(json_path, csv_path):
     """Converts a ticket JSON file into a CSV file"""
     num_tickets = 0
@@ -74,7 +78,6 @@ def ticket_to_csv(json_path, csv_path):
 
     print(f"Wrote {num_unique_tickets} tickets to {csv_path} ({num_tickets - num_unique_tickets} duplicates)")
 
-
 # this runs when you directly run the file (not when imported)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert a ticket JSON file to CSV format")
@@ -104,6 +107,8 @@ if __name__ == "__main__":
             if choice == "y":
                 break
             elif choice == "n":
+                
+                
                 print("Exiting")
                 exit(0)
 
