@@ -48,7 +48,6 @@ def write_ticket(csv_writer, ticket, taggers, counter):
         new_ticket_list.append("1/1/2020 00:00:00")
         new_ticket_list.append(tagger)
         new_ticket_list.append(tags)
-        new_ticket_list.append("dummy")
         # print(ticket_id, tagger, tags)
 
         if len(tags) > 0:
@@ -78,7 +77,7 @@ def ticket_to_csv(json_path, csv_path):
     # write the CSV header
 
     # ticket_id end_time judgement_id start_time tagger_id tags
-    csv_columns = ["_unit_id", "_created_at", "_id", "_started_at", "_worker_id", "keywords", "dummy"]
+    csv_columns = ["_unit_id", "_created_at", "_id", "_started_at", "_worker_id", "keywords"]
     csv_writer.writerow(csv_columns)
 
     counter = Counter()
