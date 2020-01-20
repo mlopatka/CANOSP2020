@@ -2,8 +2,11 @@ scrap
 data/*
 .vscode
 
+# Exceptions to data folder ignore
 !data/sample_data.json
 !data/sample_data.csv
+!data/annotated_tickets.csv
+!data/taggers.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
