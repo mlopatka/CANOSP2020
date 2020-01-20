@@ -25,7 +25,7 @@ def CSV_producer():
             "0",
         ],
     ]
-    with open("ticket.csv", "w", newline="") as file:
+    with open("tests/ticket_csv_schema.csv", "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerows(data_list)
 
@@ -34,7 +34,7 @@ def test_columns_length():
 
     CSV_producer()
 
-    with open("ticket.csv", "r") as file:
+    with open("tests/ticket_csv_schema.csv", "r") as file:
         reader = csv.reader(file)
         for row in reader:
             assert len(row) == 6

@@ -137,7 +137,7 @@ def merge_tickets():
     """
     # read all taggers info
     taggers = {}
-    with open("csv/sheets/taggers.csv") as f:
+    with open("data/taggers.csv") as f:
         reader = csv.reader(f)
         next(reader, None)
         taggers = {
@@ -148,7 +148,7 @@ def merge_tickets():
 
     # read all crowdsource tickets and tags
     crowdsouce_tickets = {}
-    with open("csv/sheets/tickets.csv") as f:
+    with open("data/annotated_tickets.csv") as f:
         reader = csv.reader(f)
         next(reader, None)
         for row in reader:
