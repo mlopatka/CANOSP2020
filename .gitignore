@@ -1,5 +1,6 @@
 scrap
 data/*
+.vscode
 
 !data/sample_data.json
 !data/sample_data.csv
