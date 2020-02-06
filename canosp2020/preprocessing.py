@@ -24,24 +24,39 @@ class Preprocess:
 
     @staticmethod
     def _custom_op(doc: doc.Doc, context=None, settings=None, **kwargs):
-        spacy_doc = doc._spacy_doc
         # TODO
         # add multi lang/lm support
+        # return None for now
+        if doc.detect_language()[1] != "en":
+            print("Cannot determine input language.")
+            return None
+
+        spacy_doc = doc._spacy_doc
         spacy_nlp = doc._spacy_nlps["en"][None]
 
-        if settings["Lemmatization"]:
-            spacy_doc = spacy_nlp(" ".join([token.lemma_ for token in spacy_doc]))
+        # TODO
+        # speed things up
+        # fine tune configurable pre-processing later on
+        spacy_doc = spacy_nlp(" ".join([token.lemma_ for token in spacy_doc if not (token.is_punct or token.is_stop)]))
 
-        if settings["RemovePunct"]:
-            spacy_doc = spacy_nlp(" ".join([token.text for token in spacy_doc if not token.is_punct]))
+        # if settings["Lemmatization"]:
+        #     spacy_doc = spacy_nlp(" ".join([token.lemma_ for token in spacy_doc]))
 
-        if settings["RemoveStopword"]:
-            spacy_doc = spacy_nlp(" ".join([token.text for token in spacy_doc if not token.is_stop]))
+        # if settings["RemovePunct"]:
+        #     spacy_doc = spacy_nlp(" ".join([token.text for token in spacy_doc if not token.is_punct]))
+
+        # if settings["RemoveStopword"]:
+        #     spacy_doc = spacy_nlp(" ".join([token.text for token in spacy_doc if not token.is_stop]))
 
         return spacy_doc
 
     def preprocess(self, text) -> spacy.tokens.doc.Doc:
-        return self._pipeline(text)["CustomOp"]
+        try:
+            text = self._pipeline(text)["CustomOp"]
+            return text
+        except Exception as e:
+            print(e)
+            return None
 
 
 if __name__ == "__main__":
