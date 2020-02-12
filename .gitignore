@@ -8,7 +8,7 @@ data/*
 !data/annotated_tickets.csv
 !data/taggers.csv
 !Brady ML Tagging Experiment 1_24.csv
-!Tag Sheet Roland -- Eve Henry.csv
+!Tag Sheet #2 Roland -- Eve Henry.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
