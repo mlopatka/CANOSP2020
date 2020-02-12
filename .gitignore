@@ -9,6 +9,7 @@ data/*
 !data/taggers.csv
 !Brady ML Tagging Experiment 1_24.csv
 !Tag Sheet #2 Roland -- Eve Henry.csv
+!Tagged questions - Joni - dataset #2.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
