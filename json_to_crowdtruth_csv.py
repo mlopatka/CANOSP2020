@@ -3,13 +3,19 @@ import csv
 import argparse
 import pathlib
 
-# TODO: CLEAN THIS UP
-
 
 class Counter:
-    """This is a really bad solution for a global variable"""
+    """Keeps statistics about the tickets and annotations"""
 
-    count = 0
+    judgment_id = 0
+
+    ticket_ids = set()
+    total_tickets = 0
+    unique_tickets = 0
+
+    annotation_ids = set()
+    total_annotations = 0
+    unique_annotations = 0
 
 
 def preprocess_text(text):
@@ -22,49 +28,52 @@ def preprocess_text(text):
     return text
 
 
-def write_ticket(csv_writer, ticket, taggers, counter):
-    """Writes a ticket as a row in the CSV file"""
-    ticket_id = ticket["ticket_id"]
+def write_annotations(csv_writer, ticket, taggers, counter):
+    """Writes annotations as rows in the CSV file"""
 
-    # ticket_id end_time judgement_id start_time tagger_id tags
+    ticket_id = ticket["ticket_id"]
 
     # CSV writer takes a list as a row
     ticket_list = [ticket_id, "1/1/2020 00:02:00"]
 
-    # print(ticket)
-
     # get tags for each tagger
     tag_dict = ticket["tags"]
-    ticket_taggers = tag_dict.keys()
-    for tagger in ticket_taggers:
+
+    for tagger in tag_dict.keys():
         # ignore SUMO tags
         if tagger == "0":
             continue
 
-        # non-SUMO tagger
-        new_ticket_list = list(ticket_list) + [counter.count]
-        counter.count += 1
+        # keeping statistics on total and unique annotation counts
+        annotation_id = f"{ticket_id};{tagger}"
+        counter.total_annotations += 1
+        if annotation_id in counter.annotation_ids:
+            continue
+        counter.annotation_ids.add(annotation_id)
+        counter.unique_annotations += 1
+
+        # non-SUMO tagger --> write to CSV
+        annotation_list = list(ticket_list) + [counter.judgment_id]
+        counter.judgment_id += 1
         tags = "["
         for tag in tag_dict[tagger]:
             tags += f'"{preprocess_text(tag)}",'
         tags = tags[: len(tags) - 1]
         tags += "]"
 
-        new_ticket_list.append("1/1/2020 00:00:00")
-        new_ticket_list.append(tagger)
-        new_ticket_list.append(tags)
-        # print(ticket_id, tagger, tags)
+        annotation_list.append("1/1/2020 00:00:00")
+        annotation_list.append(tagger)
+        annotation_list.append(tags)
 
-        # print(new_ticket_list)
         if len(tags) > 0:
-            csv_writer.writerow(new_ticket_list)
+            csv_writer.writerow(annotation_list)
 
 
 def ticket_to_csv(json_path, csv_path):
     """Converts a ticket JSON file into a CSV file"""
+
     num_tickets = 0
     num_unique_tickets = 0
-    ticket_ids = set()
 
     # load JSON file
     with open(json_path, "r") as json_file:
@@ -80,7 +89,6 @@ def ticket_to_csv(json_path, csv_path):
     csv_writer = csv.writer(csv_file, delimiter=",")
 
     # write the CSV header
-
     # ticket_id end_time judgement_id start_time tagger_id tags
     csv_columns = ["_unit_id", "_created_at", "_id", "_started_at", "_worker_id", "keywords"]
     csv_writer.writerow(csv_columns)
@@ -89,23 +97,26 @@ def ticket_to_csv(json_path, csv_path):
 
     for ticket in json_dict["tickets"]:
         # check for duplicates, update statistics
-        num_tickets += 1
-        if ticket["ticket_id"] in ticket_ids:
+        counter.total_tickets += 1
+        if ticket["ticket_id"] in counter.ticket_ids:
             continue
-        ticket_ids.add(ticket["ticket_id"])
-        num_unique_tickets += 1
+        counter.ticket_ids.add(ticket["ticket_id"])
+        counter.unique_tickets += 1
 
-        # write the ticket as a row in the CSV
-        write_ticket(csv_writer, ticket, taggers, counter)
+        write_annotations(csv_writer, ticket, taggers, counter)
 
     csv_file.close()
 
-    print(f"Wrote {num_unique_tickets} tickets to {csv_path} ({num_tickets - num_unique_tickets} duplicates)")
+    print(f"Finished writing annotations to {csv_path}")
+    print(f"{counter.unique_tickets} tickets ({counter.total_tickets - counter.unique_tickets} duplicates)")
+    print(
+        f"{counter.unique_annotations} annotations ({counter.total_annotations - counter.unique_annotations} duplicates)"
+    )
 
 
 # this runs when you directly run the file (not when imported)
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Convert a ticket JSON file to CSV format")
+    parser = argparse.ArgumentParser(description="Convert a ticket JSON file to a CSV format that CrowdTruth can read")
     parser.add_argument("--json_file", help="the relative path to the input JSON file", required=True)
     parser.add_argument(
         "--csv_file", help="the relative path to the output CSV file (will be overwritten if exists)", required=True
