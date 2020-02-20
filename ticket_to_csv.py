@@ -28,7 +28,7 @@ def write_ticket(csv_writer, ticket, taggers):
     ticket_taggers = tag_dict.keys()
     for tagger in taggers:
         if tagger in ticket_taggers:
-            tags = "|".join(tag_dict[tagger])  # using | as a delimeter for now
+            tags = preprocess_text("|".join(tag_dict[tagger]))  # using | as a delimeter for now
         else:
             tags = ""
         ticket_list.append(tags)
