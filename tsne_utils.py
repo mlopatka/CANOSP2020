@@ -43,6 +43,9 @@ def cleanup_tags(tags, threshold=100, exclude_tags_fn=None):
     unique_tags = list(set(tags))
     tags_counter = Counter(tags)
 
+    # TODO
+    # Exclude tags base on relative frequency
+    # high and low frequency tags should be removed
     if exclude_tags_fn:
         filtered_tags = []
         for each in tags_counter.elements():
@@ -88,6 +91,10 @@ def build_tsne_embeddings(tags, c2v_model=None, tsne_model=None):
     print(f"Word embedding shape: {word_embeddings.shape}")
 
     if not tsne_model:
+        # preplexity: we should experiment with value between 5 and 50 to see different results
+        # n_components: the input word embeding is a (num_words, 150) 2-D matrix
+        # n_iter: number of iterations for optimization, >= 250
+        # random_state: seed for random number generator
         tsne_model = TSNE(perplexity=40, n_components=2, init="pca", n_iter=2500, random_state=23)
 
     tsne_embeddings = tsne_model.fit_transform(word_embeddings)
