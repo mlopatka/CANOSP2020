@@ -70,22 +70,21 @@ def convert_pst_to_utc(dt_str):
 
 
 def get_question_data(api_url_base, params):
-    api_url = "{0}?_method=GET".format(api_url_base)
+    api_url = f"{api_url_base}?_method=GET"
 
     results = []
     response = requests.get(api_url, params=params)
 
     if response.status_code == 200:
         raw = response.json()
-        # archive_page(transform_results(raw), 1)
-        archive_page(transform_results(raw), 13379)
+        archive_page(transform_results(raw), 1)
 
         print(f"total count: {raw['count']}")
         total_pages = math.ceil(raw["count"] / 20.0)
         print(f"total pages: {total_pages}")
 
         # while raw['next'] is not None:
-        for page in range(13380, total_pages):
+        for page in range(2, total_pages):
             params["page"] = str(page)
             print(page)
             response = requests.get(api_url, params=params)
@@ -101,7 +100,7 @@ def get_question_data(api_url_base, params):
 
     else:
         print("[!] HTTP {0} calling [{1}]".format(response.status_code, api_url))  # 401 unauthorized
-        return Nonesy
+        return None
 
 
 def fetch_sumo_tagged():
@@ -110,8 +109,7 @@ def fetch_sumo_tagged():
         "product": "firefox",
         "locale": "en-US",
         "ordering": "-created",
-        "created__lt": "2020-01-17 00:00:00",
-        "page": 13379,
+        "created__gt": "2020-01-16 00:00:00",
     }
 
     results = get_question_data("https://support.mozilla.org/api/2/question", query_string)
@@ -124,10 +122,23 @@ def get_pages(dir="raw_data") -> List[Dict]:
     (dirpath, _, filenames) = next(os.walk(dir))
     filenames = sorted([filename for filename in filenames if filename.endswith(".json")])
 
+    # for future reference, my raw_data directory looks like this:
+    #
+    # raw_data
+    # -- tickets.json       - the previous master JSON
+    # -- tickes_1.json      - output of pythonfetch_ticket.py fetch
+    # -- ...                - output of pythonfetch_ticket.py fetch
+    # -- tickets_70.json    - output of pythonfetch_ticket.py fetch
+
     tickets = []
     for filename in filenames:
-        with open(os.path.join(dirpath, filename)) as input_f:
-            tickets.extend(json.load(input_f))
+        if filename == "tickets.json":
+            with open(os.path.join(dirpath, filename)) as input_f:
+                tickets.extend(json.loads(input_f.read())["tickets"])
+        else:
+            with open(os.path.join(dirpath, filename)) as input_f:
+                tickets.extend(json.load(input_f))
+
     return tickets
 
 
@@ -164,9 +175,21 @@ def merge_tickets():
     tickets = get_pages()
     output_tickets = []
 
+    ticket_ids = set()
+
+    # count the # of human-annotated tickets
+    human_tagged = 0
+
     for each in tickets:
         ticket_id = each["ticket_id"]
+
+        # avoid duplicates
+        if ticket_id in ticket_ids:
+            continue
+        ticket_ids.add(ticket_id)
+
         if crowdsouce_tickets.get(str(ticket_id), None):
+            human_tagged += 1
             sumo_tags = each["tags"]
             crowdsource_tags = crowdsouce_tickets[str(ticket_id)]["tags"]
             output_tickets.append(
@@ -180,6 +203,12 @@ def merge_tickets():
             )
         else:
             output_tickets.append(each)
+
+    # sort output json by ticket_id
+    output_tickets.sort(key=lambda x: int(x["ticket_id"]))
+
+    # some stats
+    print(f"{len(output_tickets)} total tickets. {human_tagged} human annotated.")
 
     with safe_open_w("data/tickets.json") as f:
         json.dump(
