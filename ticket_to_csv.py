@@ -5,7 +5,11 @@ import pathlib
 
 
 def preprocess_text(text):
-    """Clean and process the raw ticket text"""
+    """
+    Clean and process the raw ticket text
+    
+    text -- string to be preprocessed
+    """
     text = text.replace(",", "")  # remove commas
     text = text.replace('"', "")  # remove double quotes
     text = text.replace("\n", "")  # remove newlines
@@ -14,7 +18,13 @@ def preprocess_text(text):
 
 
 def write_ticket(csv_writer, ticket, taggers):
-    """Writes a ticket as a row in the CSV file"""
+    """
+    Writes a ticket as a row in the CSV file
+
+    csv_writer -- csv.writer object
+    ticket -- ticket dictionary
+    taggers -- dictionary of taggers
+    """
     ticket_id = ticket["ticket_id"]
 
     ticket_title = preprocess_text(ticket["title"])
@@ -39,7 +49,12 @@ def write_ticket(csv_writer, ticket, taggers):
 
 
 def ticket_to_csv(json_path, csv_path):
-    """Converts a ticket JSON file into a CSV file"""
+    """
+    Converts a ticket JSON file into a CSV file
+    
+    json_path -- path to the input JSON file
+    csv_path -- path to the output CSV file
+    """
     num_tickets = 0
     num_unique_tickets = 0
     ticket_ids = set()
