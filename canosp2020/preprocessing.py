@@ -3,6 +3,7 @@ import spacy
 
 from textpipe import doc, pipeline
 from textpipe.doc import Doc
+from typing import Callable
 
 
 class Preprocess:
@@ -14,15 +15,22 @@ class Preprocess:
     hello world like
     """
 
-    def __init__(self):
+    def __init__(self, custom_op: Callable = None):
+        """
+        :custom_op: See below _custom_op as example
+        """
         self._pipeline = pipeline.Pipeline([])
-        self._pipeline.register_operation("CustomOp", self._custom_op)
-        self._pipeline.steps.append(("CustomOp", {}))
+        if not custom_op:
+            self._pipeline.register_operation("CustomOp", self._custom_op)
+            self._pipeline.steps.append(("CustomOp", {}))
+        else:
+            self._pipeline.register_operation("CustomOp", custom_op)
+            self._pipeline.steps.append(("CustomOp", {}))
 
     @staticmethod
     def _custom_op(doc: doc.Doc, context=None, settings=None, **kwargs):
         """
-        Custom textpipe operation
+        Default custom textpipe operation
             - Strip HTML tags
             - Lemmatization
             - Remove stop words
