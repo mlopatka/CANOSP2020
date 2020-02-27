@@ -1,9 +1,14 @@
 import re
 import spacy
+import nltk
 
 from textpipe import doc, pipeline
 from textpipe.doc import Doc
 from typing import Callable
+
+nltk.download("stopwords")
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 
 class Preprocess:
@@ -56,10 +61,15 @@ class Preprocess:
 
         # default clean_text method, strip HTML tags and lower case
         raw_text = doc.clean.lower()
-        spacy_doc = spacy_nlp(raw_text)
+
+        # remove stopwords
+        stop_words = stopwords.words("english")
+        word_tokens = word_tokenize(raw_text)
+        clean_text = " ".join([word for word in word_tokens if word not in stop_words])
 
         # apply lemmatization
         # remove punct and stop words
+        spacy_doc = spacy_nlp(raw_text)
         spacy_doc = spacy_nlp(" ".join([token.lemma_ for token in spacy_doc if not (token.is_punct or token.is_stop)]))
 
         return spacy_doc
