@@ -32,13 +32,16 @@ We will investigate improvements to the quality and throughput of the support sy
 
 
 ## Setup
+First, install `Anaconda`, a python package manager.
+
+These commands create a new conda environment named `canosp` and install our required packages. 
 
 ```sh
-$ virtualenv venv --python=python3
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-$ pip freeze > requirements.txt
+$ conda env create -f environment.yml
+$ conda activate canosp
 ```
+
+To deactivate the environment, run `$ conda deactivate`
 
 ## Code Style
 
