@@ -4,6 +4,7 @@ from textpipe import doc, pipeline
 from textpipe.doc import Doc
 from typing import Callable
 
+
 class Preprocess:
     """
     Preprocess text documents with textpipe and sPacy.
