@@ -1,4 +1,4 @@
-name: canosp-test2
+name: canosp
 channels:
   - defaults
 dependencies:
