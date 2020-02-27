@@ -1,6 +1,5 @@
 import re
 import spacy
-
 from textpipe import doc, pipeline
 from textpipe.doc import Doc
 from typing import Callable
@@ -42,8 +41,10 @@ class Preprocess:
         # return None for now
         if doc.detect_language()[1] != "en":
             # do some manual regex preprocessing and re-try
+            text = text.strip()  # remove whitespaces in the front and the end
             text = re.sub("</?.*?>", " <> ", doc.raw)  # remove tags
             text = re.sub("(\\d|\\W)+", " ", text)  # remove special chars and digits
+            text = re.sub(r'[.|,|)|(|\|/|?|!|\'|"|#]', r" ", text)  # remove any punctuation
             doc = Doc(raw=text)
             if doc.detect_language()[1] != "en":
                 print("Cannot determine input language.")
@@ -54,10 +55,10 @@ class Preprocess:
 
         # default clean_text method, strip HTML tags and lower case
         raw_text = doc.clean.lower()
-        spacy_doc = spacy_nlp(raw_text)
 
         # apply lemmatization
         # remove punct and stop words
+        spacy_doc = spacy_nlp(raw_text)
         spacy_doc = spacy_nlp(" ".join([token.lemma_ for token in spacy_doc if not (token.is_punct or token.is_stop)]))
 
         return spacy_doc
