@@ -1,15 +1,8 @@
 import re
 import spacy
-import nltk
-
 from textpipe import doc, pipeline
 from textpipe.doc import Doc
 from typing import Callable
-
-nltk.download("stopwords")
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-
 
 class Preprocess:
     """
