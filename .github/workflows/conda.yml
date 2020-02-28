@@ -33,5 +33,4 @@ jobs:
         env:
           CFLAGS: -Wno-narrowing
         run: |
-          conda create --name canosp python=3.7 pip
           conda env create --file $GITHUB_WORKSPACE/environment.yml
