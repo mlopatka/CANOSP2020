@@ -30,4 +30,6 @@ jobs:
         run: conda info
       - name: Create environment from environment.yml
         shell: bash
-        run: conda env create -f $GITHUB_WORKSPACE/environment.yml
+        run: |
+          CFLAGS="-Wno-narrowing" pip install cld2-cffi
+          conda env create -f $GITHUB_WORKSPACE/environment.yml
