@@ -3,10 +3,10 @@ name: Setup Anaconda environment
 on:
   push:
     branches:
-    - testing-github-actions
+    - will-conda-migration
   pull_request:
     branches:
-    - testing-github-actions
+    - will-conda-migration
 
 jobs:
   example-1:
