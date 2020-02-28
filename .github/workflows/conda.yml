@@ -26,10 +26,10 @@ jobs:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
       - name: Conda info
-        shell: bash
+        shell: bash -l {0}
         run: conda info
       - name: Create environment from environment.yml
-        shell: bash
+        shell: bash -l {0}
         env:
           CFLAGS: -Wno-narrowing
         run: |
