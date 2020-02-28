@@ -21,6 +21,7 @@ dependencies:
   - spacy
   - tensorflow
   - pip:
+    - cld2-cffi
     - crowdtruth
     - nmslib
     - scikit-multilearn
