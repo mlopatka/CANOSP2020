@@ -30,8 +30,8 @@ jobs:
         run: conda info
       - name: Create environment from environment.yml
         shell: bash
+        env:
+          CFLAGS: -Wno-narrowing
         run: |
           conda create --name canosp python=3.7 pip
-          conda activate canosp
-          CFLAGS="-Wno-narrowing" pip install cld2-cffi
-          conda env update --name canosp --file $GITHUB_WORKSPACE/environment.yml
+          conda env create --file $GITHUB_WORKSPACE/environment.yml
