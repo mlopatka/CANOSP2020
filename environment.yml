@@ -21,11 +21,11 @@ dependencies:
   - spacy
   - tensorflow
   - pip:
-    - cld2-cffi
-    - crowdtruth
-    - nmslib
-    - scikit-multilearn
-    - textpipe
-    - yake
+    - --user cld2-cffi
+    - --user crowdtruth
+    - --user nmslib
+    - --user scikit-multilearn
+    - --user textpipe
+    - --user yake
 prefix: /home/wfenton/anaconda3/envs/canosp
 
