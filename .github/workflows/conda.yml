@@ -1,9 +1,6 @@
 name: Setup Anaconda environment
 
 on:
-  push:
-    branches:
-    - '*'
   pull_request:
     branches:
     - '*'
