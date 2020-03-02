@@ -41,8 +41,8 @@ class Preprocess:
         # return None for now
         if doc.detect_language()[1] != "en":
             # do some manual regex preprocessing and re-try
-            text = text.strip()  # remove whitespaces in the front and the end
             text = re.sub("</?.*?>", " <> ", doc.raw)  # remove tags
+            text = text.strip()  # remove whitespaces in the front and the end
             text = re.sub("(\\d|\\W)+", " ", text)  # remove special chars and digits
             text = re.sub(r'[.|,|)|(|\|/|?|!|\'|"|#]', r" ", text)  # remove any punctuation
             doc = Doc(raw=text)
