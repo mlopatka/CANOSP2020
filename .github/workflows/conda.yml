@@ -30,4 +30,4 @@ jobs:
         env:
           CFLAGS: -Wno-narrowing
         run: |
-          conda env create --file $GITHUB_WORKSPACE/environment.yml
+          conda env create -vvv --file $GITHUB_WORKSPACE/environment.yml
