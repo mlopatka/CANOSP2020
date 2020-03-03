@@ -27,5 +27,3 @@ dependencies:
     - scikit-multilearn
     - textpipe
     - yake
-prefix: /home/wfenton/anaconda3/envs/canosp
-
