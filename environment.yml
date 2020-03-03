@@ -1,6 +1,6 @@
 name: canosp
 channels:
-  - defaults
+  - conda-forge
 dependencies:
   - cachetools
   - click
