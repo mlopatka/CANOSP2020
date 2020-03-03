@@ -25,5 +25,5 @@ dependencies:
     - crowdtruth
     - nmslib
     - scikit-multilearn
-    - textpipe
+    - textpipe --install-option="--user"
     - yake
