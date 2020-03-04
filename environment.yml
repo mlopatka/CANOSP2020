@@ -20,6 +20,7 @@ dependencies:
   - setuptools
   - spacy
   - tensorflow
+  - tqdm
   - pip:
     - cld2-cffi
     - crowdtruth
