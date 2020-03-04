@@ -1,0 +1,3 @@
+[submodule "Char2Vec"]
+	path = Char2Vec
+	url = https://github.com/Lettria/Char2Vec.git
