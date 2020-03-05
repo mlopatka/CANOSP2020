@@ -3,7 +3,7 @@ name: Setup Anaconda environment
 on:
   pull_request:
     branches:
-    - 'will-conda-migration'
+    - '*'
 
 jobs:
   example-1:
