@@ -12,6 +12,7 @@ data/*
 !Tagged questions - Joni - dataset #2.csv
 !Roland  ML Tagging Experiment 24January2020.csv
 !january2020-100-random-canosp-issue-46-mlopatka.csv
+!data/mturk_tickets.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
