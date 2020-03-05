@@ -25,5 +25,4 @@ dependencies:
     - crowdtruth
     - nmslib
     - scikit-multilearn
-    - textpipe
     - git+https://github.com/LIAAD/yake
