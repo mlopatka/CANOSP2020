@@ -40,18 +40,21 @@ def write_ticket(csv_writer, ticket):
     csv_writer.writerow(ticket_list)
 
 
-def ticket_to_csv(json_path, csv_path):
+def ticket_to_csv(json_path, csv_path, num_tickets, random_seed, date_cutoff_days):
     """
     Converts a ticket JSON file into a CSV file, with ticket title and content as columns
     
     json_path -- path to the input JSON file
     csv_path -- path to the output CSV file
+    num_tickets -- # of tickets to include in the output CSV
+    random_seed -- seed for the random number generator
+    date_cutoff_days -- how many days back to set the minimum ticket date
     """
-    num_tickets = 2000  # how many tickets / rows we want in the output
+    random.seed(random_seed)
+
     current_num_tickets = 0
 
-    day_delta = 18 * 30  # consider tickets from now to day_delta days ago
-    cutoff_date = datetime.datetime.now() - datetime.timedelta(days=day_delta)
+    cutoff_date = datetime.datetime.now() - datetime.timedelta(days=date_cutoff_days)
     print(f"Cutoff time for random tickets: {cutoff_date.strftime('%b %d %Y %H:%M:%S')}")
 
     # load JSON file
@@ -104,6 +107,9 @@ def ticket_to_csv(json_path, csv_path):
     # write the tickets to the output CSV
     written_tickets = set()
     for ticket in tickets:
+        if len(written_tickets) == num_tickets:
+            break
+
         if ticket["ticket_id"] in ticket_ids and ticket["ticket_id"] not in written_tickets:
             # write the ticket as a row in the CSV
             write_ticket(csv_writer, ticket)
@@ -121,6 +127,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("--json_file", help="the relative path to the input JSON file", required=True)
     parser.add_argument("--csv_file", help="the relative path to the output CSV file", required=True)
+    parser.add_argument("--random_seed", help="(optional) the seed for the random number generator (integer)", required=False, default=None, type=int)
+    parser.add_argument("--num_tickets", help="(optional) the number of tickets to include (integer)", required=False, default=2000, type=int)
+    parser.add_argument("--date_cutoff_days", help="(optional) the number of days back from the current date to include tickets from (integer)", required=False, default=540, type=int)
 
     args = parser.parse_args()
 
@@ -147,4 +156,4 @@ if __name__ == "__main__":
                 exit(0)
 
     # convert JSON to CSV
-    ticket_to_csv(json_path, csv_path)
+    ticket_to_csv(json_path, csv_path, args.num_tickets, args.random_seed, args.date_cutoff_days)
