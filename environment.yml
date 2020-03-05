@@ -4,13 +4,13 @@ channels:
 dependencies:
   - cachetools
   - click
+  - cld2-cffi
   - jsonschema
   - jupyter
   - keras
   - matplotlib
   - nltk
   - pandas
-  - pathlib
   - pip
   - pytest
   - python=3.7
@@ -22,9 +22,8 @@ dependencies:
   - tensorflow
   - tqdm
   - pip:
-    - cld2-cffi
     - crowdtruth
     - nmslib
     - scikit-multilearn
     - textpipe
-    - yake
+    - git+https://github.com/LIAAD/yake
