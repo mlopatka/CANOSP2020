@@ -127,9 +127,27 @@ if __name__ == "__main__":
     )
     parser.add_argument("--json_file", help="the relative path to the input JSON file", required=True)
     parser.add_argument("--csv_file", help="the relative path to the output CSV file", required=True)
-    parser.add_argument("--random_seed", help="(optional) the seed for the random number generator (integer)", required=False, default=None, type=int)
-    parser.add_argument("--num_tickets", help="(optional) the number of tickets to include (integer)", required=False, default=2000, type=int)
-    parser.add_argument("--date_cutoff_days", help="(optional) the number of days back from the current date to include tickets from (integer)", required=False, default=540, type=int)
+    parser.add_argument(
+        "--random_seed",
+        help="(optional) the seed for the random number generator (integer)",
+        required=False,
+        default=None,
+        type=int,
+    )
+    parser.add_argument(
+        "--num_tickets",
+        help="(optional) the number of tickets to include (integer)",
+        required=False,
+        default=2000,
+        type=int,
+    )
+    parser.add_argument(
+        "--date_cutoff_days",
+        help="(optional) the number of days back from the current date to include tickets from (integer)",
+        required=False,
+        default=540,
+        type=int,
+    )
 
     args = parser.parse_args()
 
