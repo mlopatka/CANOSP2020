@@ -1,0 +1,32 @@
+name: Setup Anaconda environment
+
+on:
+  pull_request:
+    branches:
+    - '*'
+
+jobs:
+  example-1:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        python-version: [3.7]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: will-conda-migration
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          activate-environment: canosp
+          environment-file: environment.yml
+          auto-activate-base: false
+      - name: Test conda
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
