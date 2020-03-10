@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/conda.yml'
+      - 'environment.yml'
 
 jobs:
   example-1:
