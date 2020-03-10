@@ -30,5 +30,3 @@ jobs:
         run: |
           conda info
           conda list
-          pip install --user textpipe
-          conda list

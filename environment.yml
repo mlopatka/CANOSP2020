@@ -5,6 +5,7 @@ dependencies:
   - cachetools
   - click
   - cld2-cffi
+  - gensim
   - jsonschema
   - jupyter
   - keras
