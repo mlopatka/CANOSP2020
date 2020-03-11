@@ -1,9 +1,10 @@
 name: Setup Anaconda environment
 
 on:
-  pull_request:
-    branches:
-    - '*'
+  push:
+    paths:
+      - '.github/workflows/conda.yml'
+      - 'environment.yml'
 
 jobs:
   example-1:
@@ -16,8 +17,6 @@ jobs:
         python-version: [3.7]
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: will-conda-migration
       - uses: goanpeca/setup-miniconda@v1
         with:
           auto-update-conda: true
