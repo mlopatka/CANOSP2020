@@ -22,6 +22,7 @@ dependencies:
   - spacy
   - tensorflow
   - tqdm
+  - num2words
   - pip:
     - crowdtruth
     - nmslib
