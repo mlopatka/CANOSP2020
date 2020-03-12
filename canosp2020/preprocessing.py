@@ -76,6 +76,7 @@ def apply_spacy_docs(inputs):
 
     return df
 
+
 def apply_num2words(inputs):
 
     inputs = inputs.split()
@@ -99,7 +100,7 @@ class Preprocess:
     >>> preprocessor.preprocess_tickets()
     """
 
-    def __init__(self, csv_file: str, stopwords: List[str] = None, num_2_word = False):
+    def __init__(self, csv_file: str, stopwords: List[str] = None, num_2_word=False):
         self._df = pd.read_csv(csv_file)
         self._nlp = spacy.load("en_core_web_sm")
         self._num_2_word = num_2_word
@@ -166,12 +167,12 @@ class Preprocess:
             " ".join([token.lemma_ for token in doc if not (token.is_punct or token.is_stop)]) for doc in title_docs
         ]
         print(f"Final cleanup (title): {time.time() - start_time} sec")
-        
+
         # convert number to word on `content` and `title`
         if self._num_2_word:
             start_time = time.time()
-            self._df['title'] = self._df['title'].apply(apply_num2words)
-            self._df['content'] = self._df['content'].apply(apply_num2words)
+            self._df["title"] = self._df["title"].apply(apply_num2words)
+            self._df["content"] = self._df["content"].apply(apply_num2words)
             print(f"Final cleanup (title and content): {time.time() - start_time} sec")
 
         # Merge `title` and `content` column into a new column
