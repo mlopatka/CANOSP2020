@@ -7,7 +7,7 @@ import pathlib
 def preprocess_text(text):
     """
     Clean and process the raw ticket text
-    
+
     text -- string to be preprocessed
     """
     text = text.replace(",", "")  # remove commas
@@ -51,7 +51,7 @@ def write_ticket(csv_writer, ticket, taggers):
 def ticket_to_csv(json_path, csv_path):
     """
     Converts a ticket JSON file into a CSV file
-    
+
     json_path -- path to the input JSON file
     csv_path -- path to the output CSV file
     """

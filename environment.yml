@@ -1,0 +1,29 @@
+name: canosp
+channels:
+  - conda-forge
+dependencies:
+  - cachetools
+  - click
+  - cld2-cffi
+  - gensim
+  - jsonschema
+  - jupyter
+  - keras
+  - matplotlib
+  - nltk
+  - pandas
+  - pip
+  - pytest
+  - python=3.7
+  - python-dateutil
+  - pytz
+  - scikit-learn
+  - setuptools
+  - spacy
+  - tensorflow
+  - tqdm
+  - pip:
+    - crowdtruth
+    - nmslib
+    - scikit-multilearn
+    - git+https://github.com/LIAAD/yake
