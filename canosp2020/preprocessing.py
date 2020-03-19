@@ -9,6 +9,7 @@ from typing import List
 from requests_html import HTML
 from pandas import DataFrame
 from tqdm import tqdm
+from num2words import num2words
 
 from .language_dector import LanguageDetector
 
@@ -76,6 +77,18 @@ def apply_spacy_docs(inputs):
     return df
 
 
+def apply_num2words(inputs):
+
+    inputs = inputs.split()
+    tokens = []
+    for token in inputs:
+        if token.isnumeric():
+            tokens.append(num2words(token))
+        else:
+            tokens.append(token)
+    return " ".join(tokens)
+
+
 class Preprocess:
     """
     Preprocess text documents with spacy.
@@ -83,13 +96,14 @@ class Preprocess:
     :param csv_file: Path to input csv file
     :param stopwords: A list of custom stopwords
 
-    >>> preprocessor = Preprocessor("data/tickets.csv")
+    >>> preprocessor = Preprocess("data/tickets.csv")
     >>> preprocessor.preprocess_tickets()
     """
 
-    def __init__(self, csv_file: str, stopwords: List[str] = None):
+    def __init__(self, csv_file: str, stopwords: List[str] = None, num_2_word=False):
         self._df = pd.read_csv(csv_file)
         self._nlp = spacy.load("en_core_web_sm")
+        self._num_2_word = num_2_word
 
         self._df["title"] = self._df["title"].astype(str)
         self._df["content"] = self._df["content"].astype(str)
@@ -150,12 +164,19 @@ class Preprocess:
             )
         )
 
-        # Remove punct, stopwords, lemmatizer on `content`
+        # Remove punct, stopwords, lemmatizer on `title`
         start_time = time.time()
         self._df.loc[:, "title"] = [
             " ".join([token.lemma_ for token in doc if not (token.is_punct or token.is_stop)]) for doc in title_docs
         ]
         print(f"Final cleanup (title): {time.time() - start_time} sec")
+
+        # convert number to word on `content` and `title`
+        if self._num_2_word:
+            start_time = time.time()
+            self._df["title"] = self._df["title"].apply(apply_num2words)
+            self._df["content"] = self._df["content"].apply(apply_num2words)
+            print(f"Final cleanup (title and content): {time.time() - start_time} sec")
 
         # Merge `title` and `content` column into a new column
         self._df["title_content"] = self._df["title"] + " " + self._df["content"]
