@@ -39,10 +39,17 @@ def write_annotations(csv_writer, ticket, taggers, counter):
     # get tags for each tagger
     tag_dict = ticket["tags"]
 
+
     for tagger in tag_dict.keys():
         # ignore SUMO tags
         if tagger == "0":
             continue
+
+        if len(tag_dict[tagger]) == 0:
+            continue
+    
+        tag_dict[tagger] = [preprocess_text(tag) for tag in tag_dict[tagger]]
+        tag_dict[tagger] = list(set(tag_dict[tagger]))
 
         # keeping statistics on total and unique annotation counts
         annotation_id = f"{ticket_id};{tagger}"
