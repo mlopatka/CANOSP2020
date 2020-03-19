@@ -91,6 +91,9 @@ class Preprocess:
         self._df = pd.read_csv(csv_file)
         self._nlp = spacy.load("en_core_web_sm")
 
+        self._df["title"] = self._df["title"].astype(str)
+        self._df["content"] = self._df["content"].astype(str)
+
         if stopwords:
             self._nlp.Defaults.stop_words |= set(stopwords)
 
