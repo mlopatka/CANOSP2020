@@ -27,4 +27,6 @@ dependencies:
     - crowdtruth
     - nmslib
     - scikit-multilearn
+    - requests-html
+    - langdetect
     - git+https://github.com/LIAAD/yake
