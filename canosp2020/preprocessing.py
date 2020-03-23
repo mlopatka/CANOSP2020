@@ -1,19 +1,27 @@
 import re
+import os
+import itertools
 import multiprocessing
 import spacy
 import warnings
 import numpy as np
 import pandas as pd
 
-from typing import List
+from typing import List, Callable
 from requests_html import HTML
 from pandas import DataFrame
+from nltk import FreqDist
+from gensim.test.utils import common_texts, get_tmpfile
+from gensim.models import Word2Vec
 from tqdm import tqdm
+from num2words import num2words
 
 from .language_dector import LanguageDetector
 
 # Filter out annoying bs4 warning about URL in the text
 warnings.filterwarnings("ignore", category=UserWarning, module="bs4")
+
+TITLE_CONTENT = "title_content"
 
 
 def parallelize_dataframe(df, func, n_cores=multiprocessing.cpu_count()):
@@ -76,6 +84,18 @@ def apply_spacy_docs(inputs):
     return df
 
 
+def apply_num2words(inputs):
+
+    inputs = inputs.split()
+    tokens = []
+    for token in inputs:
+        if token.isnumeric():
+            tokens.append(num2words(token))
+        else:
+            tokens.append(token)
+    return " ".join(tokens)
+
+
 class Preprocess:
     """
     Preprocess text documents with spacy.
@@ -83,13 +103,17 @@ class Preprocess:
     :param csv_file: Path to input csv file
     :param stopwords: A list of custom stopwords
 
-    >>> preprocessor = Preprocessor("data/tickets.csv")
+    >>> preprocessor = Preprocess("data/tickets.csv")
     >>> preprocessor.preprocess_tickets()
     """
 
-    def __init__(self, csv_file: str, stopwords: List[str] = None):
+    def __init__(self, csv_file: str, stopwords: List[str] = None, num_2_word=False):
         self._df = pd.read_csv(csv_file)
         self._nlp = spacy.load("en_core_web_sm")
+        self._num_2_word = num_2_word
+
+        self._df["title"] = self._df["title"].astype(str)
+        self._df["content"] = self._df["content"].astype(str)
 
         if stopwords:
             self._nlp.Defaults.stop_words |= set(stopwords)
@@ -147,12 +171,19 @@ class Preprocess:
             )
         )
 
-        # Remove punct, stopwords, lemmatizer on `content`
+        # Remove punct, stopwords, lemmatizer on `title`
         start_time = time.time()
         self._df.loc[:, "title"] = [
             " ".join([token.lemma_ for token in doc if not (token.is_punct or token.is_stop)]) for doc in title_docs
         ]
         print(f"Final cleanup (title): {time.time() - start_time} sec")
+
+        # convert number to word on `content` and `title`
+        if self._num_2_word:
+            start_time = time.time()
+            self._df["title"] = self._df["title"].apply(apply_num2words)
+            self._df["content"] = self._df["content"].apply(apply_num2words)
+            print(f"Final cleanup (title and content): {time.time() - start_time} sec")
 
         # Merge `title` and `content` column into a new column
         self._df["title_content"] = self._df["title"] + " " + self._df["content"]
@@ -160,3 +191,47 @@ class Preprocess:
     def preprocess_tags(self):
         # TODO
         pass
+
+    @staticmethod
+    def get_stop_words(input_file="data/tickets_word2vec.model", threshold=0.02) -> List[str]:
+        """
+        Get a list of step words base on relative frequency.
+        The input could either be the raw CSV file or word2vec model build with genism.
+        The input format will be determined by the input_file extension <filename>.[csv|model].
+        The `eval` method is a function which takes a float variable,
+        word frequency, as a single argument and return a boolean value
+        which represent whether a word is a stop word or not.
+        By default, we consider the words within the top 2 percentile as stop words.
+            >>> from canosp2020.preprocessing import Preprocess
+            >>> stopwords = Preprocess.get_stop_words(input_file="data/tickets_word2vec.model", eval=lambda x: x <= 0.2)
+        :param input_file: Path to tickets data csv file or genism word2vec model.
+        :param eval: A function to evaluate whether a word is stop word of not
+        :rtype: A list of words.
+        """
+        _, extension = os.path.splitext(os.path.basename(input_file))
+
+        if extension == ".csv":
+            nlp = spacy.load("en_core_web_sm")
+
+            # Load csv file and merge title and content column
+            df = pd.read_csv(input_file)
+            df[TITLE_CONTENT] = df["title"] + " " + df["content"]
+            df[TITLE_CONTENT].replace("", np.nan, inplace=True)
+            df.dropna(subset=[TITLE_CONTENT], inplace=True)
+            docs = list(nlp.pipe(df["title_content"], disable=["tagger", "parser", "ner"]))
+            sents = [[token.text for token in doc] for doc in docs]
+            big_words = itertools.chain(*sents)
+
+            # Build frequency distribution
+            fdist = FreqDist(big_words)
+
+        elif extension == ".model":
+            model = Word2Vec.load(input_file)
+            counter = {word: vocab.count for word, vocab in model.wv.vocab.items()}
+            counter = dict(sorted(counter.items(), key=lambda x: x[1], reverse=True))
+            fdist = FreqDist(counter)
+
+        # stopwords = [word for word in fdist if eval(fdist.freq(word))]
+        stopwords = [each[0] for each in fdist.most_common(int(threshold * fdist.B()))]
+
+        return stopwords
