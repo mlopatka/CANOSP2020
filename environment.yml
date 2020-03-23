@@ -22,9 +22,9 @@ dependencies:
   - spacy
   - tensorflow
   - tqdm
-  - num2words
   - pip:
     - crowdtruth
     - nmslib
     - scikit-multilearn
     - git+https://github.com/LIAAD/yake
+    - num2words
