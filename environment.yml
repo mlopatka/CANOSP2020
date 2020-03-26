@@ -30,4 +30,5 @@ dependencies:
     - scikit-multilearn
     - git+https://github.com/LIAAD/yake
     - num2words
+    - venn
     - pyLDAvis
