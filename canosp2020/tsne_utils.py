@@ -32,33 +32,33 @@ def get_tags(path="./data/tickets_v2.csv"):
     return list(itertools.chain.from_iterable(all_tags))
 
 
-def cleanup_tags(tags, threshold=100, exclude_tags_fn=None):
+def get_tags_both_human_and_mturk(path="./data/all_annotated_tickets.csv"):
+    with open(path) as f:
+        reader = csv.reader(f)
+        lines = list(reader)
+        regular_human_tags = [t.split("|") for line in lines for t in line[3:13] if t]
+        mturk_tags = [t.split("|") for line in lines for t in line[13:] if t]
+
+    return list(itertools.chain.from_iterable(regular_human_tags)), list(itertools.chain.from_iterable(mturk_tags))
+
+
+def cleanup_tags(tags, threshold=0.2, occ_threshold=100):
     """
     Return a list of filtered unique tags
 
     :tags: A list of tags
-    :threshold: Minimal number of occurences to be included in the output
-    :exclude_tags_fn: A list of func to be apply on each tag, true -> leaver, false -> stayer
+    :threshold: The top 20 percentile of tags (occurences) will be removed (defualt)
+    :occ_threshold: Minimal number of occurences to be included
     """
     unique_tags = list(set(tags))
     tags_counter = Counter(tags)
 
-    # TODO
-    # Exclude tags base on relative frequency
-    # high and low frequency tags should be removed
-    if exclude_tags_fn:
-        filtered_tags = []
-        for each in tags_counter.elements():
-            excluded_flag = False
-            if tags_counter[each] >= threshold:
-                for filter_fn in exclude_tags_fn:
-                    if filter_fn(each):
-                        excluded_flag = True
-                        break
-                if not excluded_flag:
-                    filtered_tags.append(each)
-    else:
-        filtered_tags = [each for each in tags_counter.elements() if tags_counter[each] >= threshold]
+    # Build stop "tags" list
+    stop_tags = [each[0] for each in tags_counter.most_common(int(threshold * len(unique_tags)))]
+
+    filtered_tags = [
+        each for each in tags_counter.elements() if each not in stop_tags and tags_counter[each] >= occ_threshold
+    ]
 
     unique_filtered_tags = list(set(filtered_tags))
     filtered_tags_counter = Counter(filtered_tags)
