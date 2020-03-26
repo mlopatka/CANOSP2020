@@ -56,7 +56,9 @@ def main(input_file, output_file, output_bin_file, min_count, size, window, work
     df[TITLE_CONTENT] = df["title"] + " " + df["content"]
     df[TITLE_CONTENT].replace("", np.nan, inplace=True)
     df.dropna(subset=[TITLE_CONTENT], inplace=True)
-    docs = list(nlp.pipe(df["title_content"], disable=["tagger", "parser", "ner"]))
+    docs = list(
+        nlp.pipe(df["title_content"], disable=["tagger", "parser", "ner"], n_process=multiprocessing.cpu_count())
+    )
     sents = [[token.text for token in doc] for doc in docs]
 
     # Train word2vec model
@@ -68,4 +70,5 @@ def main(input_file, output_file, output_bin_file, min_count, size, window, work
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    model = Word2Vec.load("data/tickets_word2vec.model")

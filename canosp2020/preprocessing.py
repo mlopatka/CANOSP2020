@@ -188,9 +188,12 @@ class Preprocess:
         # Merge `title` and `content` column into a new column
         self._df["title_content"] = self._df["title"] + " " + self._df["content"]
 
-    def preprocess_tags(self):
-        # TODO
-        pass
+    @staticmethod
+    def preprocess_tags(tags):
+        nlp = spacy.load("en_core_web_sm")
+        docs = nlp.pipe(tags, disable=["parser", "ner", "textcat"], n_process=multiprocessing.cpu_count())
+        tags = ["".join([token.lemma_ for token in doc if not (token.is_stop)]) for doc in docs]
+        return list(filter(None, tags))
 
     @staticmethod
     def get_stop_words(input_file="data/tickets_word2vec.model", threshold=0.02) -> List[str]:
