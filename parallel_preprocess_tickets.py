@@ -26,9 +26,10 @@ SCRIPT_NAME = "parallel_preprocess_tickets.py"
 
 
 def preprocess_df(df):
-    preprocessor = Preprocess()
-    df["title"] = df["title"].map(lambda x: preprocessor.preprocess(x))
-    df["content"] = df["content"].map(lambda x: preprocessor.preprocess(x))
+    preprocessor = Preprocess(df)
+    df = preprocessor.preprocess_tickets()
+    df = preprocessor._df
+    df = df.drop(columns=['ticket_title', 'ticket_content', 'ticket_lang'])
     return df
 
 

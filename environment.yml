@@ -11,6 +11,7 @@ dependencies:
   - keras
   - matplotlib
   - nltk
+  - nb_conda
   - pandas
   - pip
   - pytest
@@ -22,8 +23,12 @@ dependencies:
   - spacy
   - tensorflow
   - tqdm
+  - seaborn
   - pip:
     - crowdtruth
     - nmslib
     - scikit-multilearn
     - git+https://github.com/LIAAD/yake
+    - num2words
+    - venn
+    - pyLDAvis
