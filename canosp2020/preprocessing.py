@@ -107,6 +107,7 @@ class Preprocess:
     >>> preprocessor.preprocess_tickets()
     """
 
+<<<<<<< HEAD
     def __init__(self, df, stopwords: List[str] = None, num_2_word=False):
         self._df = df
         self._nlp = spacy.load("en_core_web_sm")
@@ -114,6 +115,15 @@ class Preprocess:
 
         self._df["ticket_title"] = self._df["ticket_title"].astype(str)
         self._df["ticket_content"] = self._df["ticket_content"].astype(str)
+=======
+    def __init__(self, csv_file: str, stopwords: List[str] = None, num_2_word=False):
+        self._df = pd.read_csv(csv_file)
+        self._nlp = spacy.load("en_core_web_sm")
+        self._num_2_word = num_2_word
+
+        self._df["title"] = self._df["title"].astype(str)
+        self._df["content"] = self._df["content"].astype(str)
+>>>>>>> master
 
         if stopwords:
             self._nlp.Defaults.stop_words |= set(stopwords)
@@ -181,16 +191,30 @@ class Preprocess:
         # convert number to word on `content` and `title`
         if self._num_2_word:
             start_time = time.time()
+<<<<<<< HEAD
             self._df["ticket_title"] = self._df["ticket_title"].apply(apply_num2words)
             self._df["ticket_content"] = self._df["ticket_content"].apply(apply_num2words)
+=======
+            self._df["title"] = self._df["title"].apply(apply_num2words)
+            self._df["content"] = self._df["content"].apply(apply_num2words)
+>>>>>>> master
             print(f"Final cleanup (title and content): {time.time() - start_time} sec")
 
         # Merge `title` and `content` column into a new column
         self._df["title_content"] = self._df["ticket_title"] + " " + self._df["ticket_content"]
 
+<<<<<<< HEAD
     def preprocess_tags(self):
         # TODO
         pass
+=======
+    @staticmethod
+    def preprocess_tags(tags):
+        nlp = spacy.load("en_core_web_sm")
+        docs = nlp.pipe(tags, disable=["parser", "ner", "textcat"], n_process=multiprocessing.cpu_count())
+        tags = ["".join([token.lemma_ for token in doc if not (token.is_stop)]) for doc in docs]
+        return list(filter(None, tags))
+>>>>>>> master
 
     @staticmethod
     def get_stop_words(input_file="data/tickets_word2vec.model", threshold=0.02) -> List[str]:
@@ -215,7 +239,11 @@ class Preprocess:
 
             # Load csv file and merge title and content column
             df = pd.read_csv(input_file)
+<<<<<<< HEAD
             df[TITLE_CONTENT] = df["ticket_title"] + " " + df["ticket_content"]
+=======
+            df[TITLE_CONTENT] = df["title"] + " " + df["content"]
+>>>>>>> master
             df[TITLE_CONTENT].replace("", np.nan, inplace=True)
             df.dropna(subset=[TITLE_CONTENT], inplace=True)
             docs = list(nlp.pipe(df["title_content"], disable=["tagger", "parser", "ner"]))
