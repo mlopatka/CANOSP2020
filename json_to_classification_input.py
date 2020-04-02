@@ -70,7 +70,7 @@ def ticket_to_csv(json_path, csv_path):
     num_unique_tickets = 0
     ticket_ids = set()
 
-    with open("candidate_tags/all_methods_intersection", "r") as f:
+    with open("candidate_tags/roland_edit_all_methods_intersection.txt", "r") as f:
         candidate_tags = [line.strip() for line in f.readlines()]
 
     print(candidate_tags)
